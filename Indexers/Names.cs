@@ -24,17 +24,19 @@ namespace Indexers
         {
             get
             {
-                for (int i = 0; i < nameList.Count; i++)
+                var isOk = nameList.Where(a=>a == name).FirstOrDefault();
+                if (isOk != null)
                 {
-                    if (nameList[i] == name)
-                    {
-                        return i + 1;
-                    }
+                    return nameList.IndexOf(isOk) +1;
                 }
-                return 0;
+                else
+                {
+                    return 0;
+                }
             }
             set
             {
+
                 for (int i = 0; i < nameList.Count; i++)
                 {
                     if (i == value)
