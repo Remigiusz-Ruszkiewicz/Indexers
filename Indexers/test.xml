@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <User Id = "1" Name="Admin" Role="Admin" Password="Admin" />
+  <User Id = "2" Name="adas" Role="User" Password="adas" />
+  <User Id = "3" Name="inne" Role="User" Password="user" />
+</root>

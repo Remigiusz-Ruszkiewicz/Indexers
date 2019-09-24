@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Indexers
 {
@@ -8,6 +9,28 @@ namespace Indexers
     {
         private static void Main(string[] args)
         {
+            var users = new List<AnimalUser>();
+            XDocument ducument = XDocument.Load("test.xml");
+            List<XElement> elements = document.Element("Root").Elements().ToList();
+            elements.ForEach(e =>
+            {
+                var user = new AnimalUser
+                {
+                    Id = int.Parse(e.Attribute("Id").Value),
+                    Name = e.Attribute("Name").Value,
+                    Role = e.Attribute("Role").Value,
+                    Password = e.Attribute("Password").Value
+
+                };
+                users.Add(user);
+            });
+            Console.Read();
+
+
+
+
+
+
 
             //Names names = new Names();
             //names.Add("Roman"); //1
@@ -25,38 +48,38 @@ namespace Indexers
             //Console.WriteLine(z);
             //Console.WriteLine(a);
             //Console.WriteLine(names.Lenght);
-            List<Animal> animalson = new List<Animal>();
-            List<Country> countries = new List<Country>();
-            countries.Add(new Country { CountryId = 1, Name = "Polska" });
-            countries.Add(new Country { CountryId = 2, Name = "Anglia" });
+            //List<Animal> animalson = new List<Animal>();
+            //List<Country> countries = new List<Country>();
+            //countries.Add(new Country { CountryId = 1, Name = "Polska" });
+            //countries.Add(new Country { CountryId = 2, Name = "Anglia" });
 
-            xd(animalson);
-            var polskieZwierzaki = animalson.Join(countries,
-                animal => animal.CountryId,
-                country => country.CountryId,
-                (animal, country) => new
-                {
-                    Id = animal.id,
-                    Name = animal.Name,
-                    Age = animal.Age,
-                    CountryName = country.Name,
-                    CountryId = animal.CountryId
-                })
-                .Select(a=> new Animal
-                {
-                    Name =a.Name,
-                    id = a.Id,
-                    Age = a.Age,
-                    CountryId = a.CountryId
-                })
-                .Where(a=> a.CountryId==2)
-                .ToList();
+            //xd(animalson);
+            //var polskieZwierzaki = animalson.Join(countries,
+            //    animal => animal.CountryId,
+            //    country => country.CountryId,
+            //    (animal, country) => new
+            //    {
+            //        Id = animal.id,
+            //        Name = animal.Name,
+            //        Age = animal.Age,
+            //        CountryName = country.Name,
+            //        CountryId = animal.CountryId
+            //    })
+            //    .Select(a=> new Animal
+            //    {
+            //        Name =a.Name,
+            //        id = a.Id,
+            //        Age = a.Age,
+            //        CountryId = a.CountryId
+            //    })
+            //    .Where(a=> a.CountryId==2)
+            //    .ToList();
 
 
-            polskieZwierzaki.ForEach(a =>
-            {
-                Console.WriteLine(a);
-            });
+            //polskieZwierzaki.ForEach(a =>
+            //{
+            //    Console.WriteLine(a);
+            //});
             //IEnumerable<Animal> elefants = from animals in animalson
             //                               where animals.Name == "Słoń"
             //                               select animals;
