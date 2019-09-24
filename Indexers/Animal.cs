@@ -11,6 +11,7 @@ namespace Indexers
         public int id { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
+        public int CountryId { get; set; }
         public override string ToString()
         {
             return $"{id}{Name}{Age}";

@@ -26,28 +26,83 @@ namespace Indexers
             //Console.WriteLine(a);
             //Console.WriteLine(names.Lenght);
             List<Animal> animalson = new List<Animal>();
+            List<Country> countries = new List<Country>();
+            countries.Add(new Country { CountryId = 1, Name = "Polska" });
+            countries.Add(new Country { CountryId = 2, Name = "Anglia" });
+
             xd(animalson);
-            IEnumerable<Animal> elefants = from animals in animalson
-                                           where animals.Name == "Słoń"
-                                           select animals;
-            Console.WriteLine(elefants.FirstOrDefault());
-            Console.WriteLine(elefants.Count());
-            Console.WriteLine(elefants.LastOrDefault());
-            //Console.WriteLine(elefants.SingleOrDefault());
-            double avg = elefants.Average(e => e.Age);
-            int max = elefants.Max(e => e.Age);
-            int min = elefants.Min(e => e.Age);
-            int sum = elefants.Sum(e => e.Age);
-            int sum1 = elefants.Select(a => a.Age).Sum();
+            var polskieZwierzaki = animalson.Join(countries,
+                animal => animal.CountryId,
+                country => country.CountryId,
+                (animal, country) => new
+                {
+                    Id = animal.id,
+                    Name = animal.Name,
+                    Age = animal.Age,
+                    CountryName = country.Name,
+                    CountryId = animal.CountryId
+                })
+                .Select(a=> new Animal
+                {
+                    Name =a.Name,
+                    id = a.Id,
+                    Age = a.Age,
+                    CountryId = a.CountryId
+                })
+                .Where(a=> a.CountryId==2)
+                .ToList();
 
 
-            var group = elefants.GroupBy(e => new
+            polskieZwierzaki.ForEach(a =>
             {
-                e.Name
-            }).Select(g=>new {Name = g.Key ,Age = g.Sum(a=> a.Age) });
-            Console.WriteLine(group.FirstOrDefault());
+                Console.WriteLine(a);
+            });
+            //IEnumerable<Animal> elefants = from animals in animalson
+            //                               where animals.Name == "Słoń"
+            //                               select animals;
+            //IEnumerable<Animal> elefants = from animals in animalson
+            //                               where animals.id < 4 && animals.Age >20 || animals.Age%2 ==0
+            //                               select animals;
+
+            //var ń = animalson
+            //    .Where(a => a.Name.Contains("ń"))
+            //    .Select(a => a.Name)
+            //    .Distinct()
+            //    .ToList();
+            //Console.WriteLine(elefants.FirstOrDefault());
+            //Console.WriteLine(elefants.Count());
+            //Console.WriteLine(elefants.LastOrDefault());
+            //Console.WriteLine(elefants.SingleOrDefault());
+
+            //foreach (var item in elefants)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //Console.WriteLine(ń);
+            //double avg = elefants.Average(e => e.Age);
+            //int max = elefants.Max(e => e.Age);
+            //int min = elefants.Min(e => e.Age);
+            //int sum = elefants.Sum(e => e.Age);
+            //int sum1 = elefants.Select(a => a.Age).Sum();
+
+
+            //var cos = elefants.(e => new
+            //{
+            //    e.Name
+            //}).Select(g => new { Name = g.Key, Age = g.Sum(a => a.Age) });
+            //Console.WriteLine(group.FirstOrDefault());
+            //List<Animal> toRemove = elefants.ToList();
+            //var toAdd = elefants.ToList();
+            //animalson.AddRange(toAdd)
+            //animalson.ForEach(a =>
+            //   {
+            //       Console.WriteLine(a);
+            //   }
+            //   );
+
             Console.Read();
         }
+
 
         private static void xd(List<Animal> animals)
         {
@@ -55,25 +110,29 @@ namespace Indexers
             {
                 id = 1,
                 Name = "Słoń",
-                Age = 13
+                Age = 13,
+                CountryId = 1
             });
             animals.Add(new Animal
             {
                 id = 4,
                 Name = "Słoń",
-                Age = 15
+                Age = 15,
+                CountryId = 2
             });
             animals.Add(new Animal
             {
                 id = 2,
                 Name = "Koń",
-                Age = 13
+                Age = 13,
+                CountryId = 2
             });
             animals.Add(new Animal
             {
                 id = 3,
                 Name = "Małpa",
-                Age = 13
+                Age = 24,
+                CountryId = 1
             });
         }
     }
