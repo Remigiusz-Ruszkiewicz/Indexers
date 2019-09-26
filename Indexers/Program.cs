@@ -9,25 +9,106 @@ namespace Indexers
     {
         private static void Main(string[] args)
         {
-            var users = new List<AnimalUser>();
-            XDocument ducument = XDocument.Load("test.xml");
-            List<XElement> elements = document.Element("Root").Elements().ToList();
-            elements.ForEach(e =>
+            Delete(3);
+            var users = GetUsers();
+            users.ForEach(u => Console.WriteLine(u));
+            Add(new AnimalUser
             {
-                var user = new AnimalUser
-                {
-                    Id = int.Parse(e.Attribute("Id").Value),
-                    Name = e.Attribute("Name").Value,
-                    Role = e.Attribute("Role").Value,
-                    Password = e.Attribute("Password").Value
-
-                };
-                users.Add(user);
+                Id = 4,
+                Name = "Nowy",
+                Role = "Admin",
+                Password = "Cos"
             });
-            Console.Read();
+            //var users = new List<AnimalUser>();
+            //XDocument document = XDocument.Load("test.xml");
+            //List<XElement> elements = document.Element("Root").Elements().ToList();
+            //elements.ForEach(e =>
+            //{
+            //    var user = new AnimalUser
+            //    {
+            //        Id = int.Parse(e.Attribute("Id").Value),
+            //        Name = e.Attribute("Name").Value,
+            //        Role = e.Attribute("Role").Value,
+            //        Password = e.Attribute("Password").Value
 
+            //    };
+            //    users.Add(user);
 
+            //});
+            //users.ForEach(u => Console.WriteLine(u));
+            //Console.Read();
 
+            List<AnimalUser> GetUsers()
+            {
+                List<AnimalUser> result = new List<AnimalUser>();
+                var xd = XDocument.Load("test.xml");
+                var tempList = xd.Element("root").Elements("User").ToList();
+                tempList.ForEach(u =>
+                {
+                    AnimalUser user = new AnimalUser();
+                    user.Id = int.Parse(u.Attribute("Id").Value);
+                    user.Name = u.Attribute("Name").Value.ToString();
+                    user.Role = u.Attribute("Role").Value.ToString();
+                    user.Password = u.Attribute("Password").Value.ToString();
+                    result.Add(user);
+                });
+                return result;
+            }
+            void Add(AnimalUser user)
+            {
+                int id = GetLastId();
+                var xd = XDocument.Load("test.xml");
+                XElement element = new XElement("User",
+                    new XAttribute("Id", ++id),
+                    new XAttribute("Name", user.Name),
+                    new XAttribute("Role", user.Role),
+                    new XAttribute("Password", user.Password)
+                    );
+                xd.Element("root").Add(element);
+                xd.Save("test.xml");
+            }
+
+            int GetLastId()
+            {
+                return GetUsers().Count!= 0 ? GetUsers().Max(a => a.Id): 0;
+            }
+            bool Delete(int id)
+            {
+                var item = GetUsers().FirstOrDefault(a => a.Id == id);
+                var xd = XDocument.Load("test.xml");
+                if (item == null)
+                {
+                    return false;
+                }
+                xd.Element("root").Elements().Where(a=>a.Attribute("Id").Value == item.Id.ToString()).Remove();
+                xd.Save("test.xml");
+                return true;
+            }
+            AnimalUser Replace(AnimalUser item)
+            {
+                
+                var dbitem = GetUsers().FirstOrDefault(a => a.Id == item.Id);
+                if (item != null)
+                {
+                    Delete(dbitem.Id);
+                    var xd = XDocument.Load("test.xml");
+                    dbitem.Name = item.Name;
+                    dbitem.Password = item.Password;
+                    dbitem.Role = item.Role;
+                    XElement element = new XElement("User",
+                    new XAttribute("Id", dbitem.Id),
+                    new XAttribute("Name", dbitem.Name),
+                    new XAttribute("Role", dbitem.Role),
+                    new XAttribute("Password", dbitem.Password)
+                    );
+                    xd.Element("root").Add(element);
+                    xd.Save("test.xml");
+                    return dbitem;
+
+                }
+                
+                
+            }
 
 
 
@@ -127,36 +208,36 @@ namespace Indexers
         }
 
 
-        private static void xd(List<Animal> animals)
-        {
-            animals.Add(new Animal
-            {
-                id = 1,
-                Name = "Słoń",
-                Age = 13,
-                CountryId = 1
-            });
-            animals.Add(new Animal
-            {
-                id = 4,
-                Name = "Słoń",
-                Age = 15,
-                CountryId = 2
-            });
-            animals.Add(new Animal
-            {
-                id = 2,
-                Name = "Koń",
-                Age = 13,
-                CountryId = 2
-            });
-            animals.Add(new Animal
-            {
-                id = 3,
-                Name = "Małpa",
-                Age = 24,
-                CountryId = 1
-            });
-        }
+        //private static void xd(List<Animal> animals)
+        //{
+        //    animals.Add(new Animal
+        //    {
+        //        id = 1,
+        //        Name = "Słoń",
+        //        Age = 13,
+        //        CountryId = 1
+        //    });
+        //    animals.Add(new Animal
+        //    {
+        //        id = 4,
+        //        Name = "Słoń",
+        //        Age = 15,
+        //        CountryId = 2
+        //    });
+        //    animals.Add(new Animal
+        //    {
+        //        id = 2,
+        //        Name = "Koń",
+        //        Age = 13,
+        //        CountryId = 2
+        //    });
+        //    animals.Add(new Animal
+        //    {
+        //        id = 3,
+        //        Name = "Małpa",
+        //        Age = 24,
+        //        CountryId = 1
+        //    });
+        //}
     }
 }
